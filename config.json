@@ -1,0 +1,10 @@
+{
+    "params": {
+        "testRepetition": 3
+    },
+    "raspberryPi": {
+        "ipAddr": "192.168.1.33",
+        "login": "pi",
+        "pwd": "raspberry"
+    }
+}

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Entry point to the test framework.
-
+Check the status of the Wi-Fi connection.
+ 
 =======================================================================
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,33 +18,23 @@ Entry point to the test framework.
 """
 
 
-#====================================================================
-# Imports
-#--------------------------------------------------------------------
-import os
-import json
 import unittest
-import importlib
 
-from core.config import SysConfig, TestConfig
-from core.logger import Logger
+from core import tcbase
 
 
-#====================================================================
-# Initializations
-#--------------------------------------------------------------------
-configfile = 'config.json'
+class TcWifiConnection(tcbase.TestCaseBase):
+    """Check the status of the Wi-Fi connection."""
 
+    @unittest.skip("This is under development.")
+    def testA(self):
+        """Test routine A"""
+        self.assertNotEqual(111, 222, "A is equal to B")
 
-#====================================================================
-# Main Processing
-#--------------------------------------------------------------------
-sc = SysConfig()
-sc.read_json(configfile)
+    def testB(self):
+        """Test routine B"""
+        self.assertEqual(111, 1311, "A is not equal to B")
 
-tcfg = TestConfig()
-runner = unittest.TextTestRunner(verbosity=0)
-result = runner.run(tcfg.testsuite)
-
-logger = Logger(sc, tcfg, result)
-logger.write2html()
+    def testC(self):
+        """Test routine C"""
+        self.assertEqual(111, 111, "A is not equal to B")
