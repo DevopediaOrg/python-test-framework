@@ -24,7 +24,7 @@ Do the following on Raspberry Pi:
 * Install snmp: `sudo apt-get install snmpd snmp`
 
 ## Code Organization
-
+TBD
 
 ## Usage
-
+TBD

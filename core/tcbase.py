@@ -27,7 +27,9 @@ class TestCaseBase(unittest.TestCase):
     
     def setUp(self):
         """Setup for all test cases."""
-        print("[{}] Running {} ...".format(str(datetime.now())[:19], self.id()))
+        self.startts = datetime.now()
+        print("[{}] Running {} ...".format(str(self.startts)[:-7], self.id()))
     
     def tearDown(self):
         """Cleanup for all test cases."""
+        self.endts = datetime.now()

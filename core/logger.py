@@ -20,6 +20,7 @@ Do all the logging for this system.
 
 from datetime import datetime
 import os
+from unittest import TestResult
 
 
 class Logger:
@@ -56,9 +57,9 @@ class Logger:
     <div class='panel-body'>
     ''')
     
-        content.append("<b>Start Time</b>: {}<br>".format(str(self.tcfg.startts)[:19]))
+        content.append("<b>Start Time</b>: {}<br>".format(str(self.tcfg.startts)[:-7]))
         endts = datetime.now()
-        content.append("<b>End Time</b>: {}<br>".format(str(endts)[:19]))
+        content.append("<b>End Time</b>: {}<br>".format(str(endts)[:-7]))
         content.append("<b>Duration</b>: {}<br>".format(str(endts-self.tcfg.startts)[:-7]))
         content.append("<b>Command</b>: {}<br>".format(self.tcfg.command))
         content.append("<b>Directory</b>: {}<br>".format(self.tcfg.path))
@@ -78,15 +79,17 @@ class Logger:
   <table class='table table-bordered table-striped'>
     <thead>
         <tr class='alert alert-danger'>
-          <th>Failed Test</th>
-          <th>Traceback</th>
+          <th width="25%">Failed Test</th>
+          <th width="55%">Traceback</th>
+          <th width="10%">Start</th>
+          <th width="10%">End</th>
         </tr>
     </thead>
     <tbody>
     ''')
-        for tc in self.result.failures:
+        for ts, tc in zip(self.result.failed, self.result.failures):
             content.append("<tr class='alert alert-danger'>")
-            content.append("  <td>{}</td><td>{}</td>".format(tc[0], tc[1].replace("\n", "<br>")))
+            content.append("  <td>{}</td><td>{}</td><td>{}</td><td>{}</td>".format(tc[0], tc[1].replace("\n", "<br>"), str(ts[0])[:-7], str(ts[1])[:-7]))
             content.append("</tr>")
         content.append('''
     </tbody>
@@ -97,8 +100,8 @@ class Logger:
   <table class='table table-bordered table-striped'>
     <thead>
         <tr class='alert alert-info'>
-          <th>Skipped Test</th>
-          <th>Remarks</th>
+          <th width="25%">Skipped Test</th>
+          <th width="75%">Remarks</th>
         </tr>
     </thead>
     <tbody>
@@ -113,6 +116,27 @@ class Logger:
   ''')
 
         content.append('''
+  <table class='table table-bordered table-striped'>
+    <thead>
+        <tr class='alert alert-success'>
+          <th width="25%">Passed Test</th>
+          <th width="55%">Remarks</th>
+          <th width="10%">Start</th>
+          <th width="10%">End</th>
+        </tr>
+    </thead>
+    <tbody>
+    ''')
+        for tc in self.result.passed:
+            content.append("<tr class='alert alert-success'>")
+            content.append("  <td>{}</td><td>{}</td><td>{}</td><td>{}</td>".format(tc[2], tc[2].shortDescription(), str(tc[0])[:-7], str(tc[1])[:-7]))
+            content.append("</tr>")
+        content.append('''
+    </tbody>
+  </table>
+  ''')
+
+        content.append('''
 </div>
 </body>
 </html>
@@ -120,3 +144,20 @@ class Logger:
 
         with open('out.htm', 'w') as f:
             f.write("\n".join(content))
+
+
+class SysTestResult(TestResult):
+    def __init__(self, *args, **kwargs):
+        self.passed = []
+        self.failed = []
+        super().__init__(*args, **kwargs)
+
+    def addSuccess(self, *args, **kwargs):
+        test, = args
+        self.passed.append((test.startts, test.endts, test))
+
+    def addFailure(self, *args, **kwargs):
+        test, err = args
+        self.failed.append((test.startts, test.endts))
+        super().addFailure(*args, **kwargs)
+    

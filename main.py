@@ -26,8 +26,8 @@ import json
 import unittest
 import importlib
 
+from core.logger import Logger, SysTestResult
 from core.config import SysConfig, TestConfig
-from core.logger import Logger
 
 
 #====================================================================
@@ -43,7 +43,7 @@ sc = SysConfig()
 sc.read_json(configfile)
 
 tcfg = TestConfig()
-runner = unittest.TextTestRunner(verbosity=0)
+runner = unittest.TextTestRunner(verbosity=0, resultclass=SysTestResult)
 result = runner.run(tcfg.testsuite)
 
 logger = Logger(sc, tcfg, result)
