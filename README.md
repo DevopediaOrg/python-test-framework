@@ -17,11 +17,11 @@ We have used the following for the project:
 The instructions below are documented for Ubuntu Linux. Do the following on the host:
 
 * Install RRDTool: `sudo apt-get install librrds-perl rrdtool`
-* Install PySNMP: `sudo pip3 install pysnmp`
+* Install PySNMP: `sudo pip3 install pysnmp pysnmp-mibs`
 
 Do the following on Raspberry Pi:
 
-* Install snmp: `sudo apt-get install snmpd snmp`
+* Install snmp: `sudo apt-get install snmpd snmp snmp-mibs-downloader`
 
 ## Code Organization
 TBD
